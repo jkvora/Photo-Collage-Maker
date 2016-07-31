@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname,'../public')));
 
 
 //Config Port no and Listen Server
-var port=3000;
+var port=process.env.PORT || 3000;
 app.listen(port,function(){
 	console.log("Application is running at port no:"+ port);
 });
