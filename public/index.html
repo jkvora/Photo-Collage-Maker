@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width,
+	initial-scale=1">
+    <script src="vendor/js/fabric.js"></script>       
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="vendor/css/bootstrap.css">
+
+</head>
+
+<body>
+<!--Container-->
+	<div class="canvas_control">
+		
+		<div class="canvas_info">
+			Photo Collage App
+		</div>
+
+	 	<div id="canvasWrap" class="canvasWrap">
+   			 <canvas id="canvas" class="canvas_collage" width="800" height="450"></canvas>
+  		 </div>
+	</div>
+
+	<div class="canvas_helper">
+		 <a href="#" class="btn btn-info" id="download" role="button">Download</a>
+	</div>
+
+
+
+ 
+ <!--Bottom Row Navigation-->
+<div class="container-fluid img-nav"> 
+    <div class="row">	 
+	  <div class="col-xs-12 col-md-9">
+	 		<div  id="img-container" class="img-container">
+	 		</div>
+	  </div>
+
+	  <!--Image nav Bar -->
+	  <div class="col-xs-6 col-md-3">
+	   	 <div class="input-wrapper">
+		   	 <label for="imginput">
+	    		 <div class="uploadbtn">+ Upload</div>
+	   		 </label>
+			<input type="file" id="imginput" class="imginput" name="imginput" accept="image/*" 
+			onchange="displayimg(event)">
+		</div>
+	  </div>
+
+	</div>
+</div>
+
+
+</body>
+	 <script type="text/javascript" src="js/script.js"></script>
+</html>
