@@ -1,8 +1,8 @@
 window.onload=init;
+window.PhotoCollage={};
 
-var canvas;
 
-//Init Cnavas
+//Initilizing canvas
 function  init() {
 
     //Canvas Attach Event Handlers
@@ -13,12 +13,14 @@ function  init() {
     canvasWrapper.addEventListener("dragover",OnImageDragOver,false);
 
     //Canvas Properties
-		canvas = new fabric.Canvas('canvas');
-		canvas.selectionColor = 'rgba(0,0,0,0.3)';
-		canvas.selectionBorderColor = 'black';
-		canvas.selectionLineWidth = 1;
+		PhotoCollage = new fabric.Canvas('canvas');
+		PhotoCollage.selectionColor = 'rgba(0,0,0,0.3)';
+		PhotoCollage.selectionBorderColor = 'black';
+		PhotoCollage.selectionLineWidth = 1;
 
-    //DownLoad Canvas  As Image()
+    //DownLoad Canvas  As Image
+    //Not made visible as tainted canvas cannot be dowbloaded
+    //due to CORS origin policy
     document.getElementById('download').addEventListener('click', function() {
     downloadCanvas(this, 'canvas', 'photo_collage.jpg');
 }, false);
@@ -31,47 +33,55 @@ function  init() {
 //Add Key Down Event 
 //On Delete Remove Selected Object from canvas 
 function OnkeyDown(event){
-    var activeObject = canvas.getActiveObject();
-    console.log(event.keyCode);
+    var activeObject = PhotoCollage.getActiveObject();
     if (event.keyCode === 46) {
-    	canvas.remove(activeObject);
+    	PhotoCollage.remove(activeObject);
     }
 }
 
 //Add Drop Event Listner to get images into canvas
 function  OnImageDrop(event) {
-    console.log("Image Dropped");
     event.preventDefault();
     var imageObj=new Image();
-    imageObj.src=event.dataTransfer.getData("imgsrc");
+    imageObj.src=event.dataTransfer.getData("text");
     insertAtCenter(imageObj);
     
 }
 
+
+//Image drag over event
 function OnImageDragOver(event) {
-  console.log("Image DragOver");
   event.preventDefault();
 }
 
-
+//Set Image src on drag start
 function drag(event) {
-    event.dataTransfer.setData("imgsrc",event.target.src);
+    event.dataTransfer.setData("text",event.target.src);
 }
+
 
 //On Upload Image Display it
 function displayimg(event){
   var selectedFile = event.target.files[0];
   var reader = new FileReader();
+  var preview=document.getElementById("img_drop");
 
-  var imageObj=new Image();
-  imageObj.title = selectedFile.name;
-
-  reader.onload = function(event) {
-    imageObj.src = event.target.result;
-	insertAtCenter(imageObj);
+  //On Image Load
+  preview.onload=function(){
+     var imageObj=new Image();
+     imageObj.src=this.src;
+    insertAtCenter(imageObj);
+  };
+  
+  //On File Read Complete
+  reader.onload=function () {
+    preview.src=reader.result;
   };
 
-  reader.readAsDataURL(selectedFile);
+  if (selectedFile) {
+    reader.readAsDataURL(selectedFile);
+  }
+
 }
 
 
@@ -79,11 +89,12 @@ function displayimg(event){
 function insertAtCenter(imgElement){
   imgElement.setAttribute('crossOrigin', 'anonymous');
 	var imgInstance = new fabric.Image(imgElement, {
-    left: canvas.getWidth()/2-imgElement.width/2,
-    top: canvas.getHeight()/2-imgElement.height/2,
+    left: PhotoCollage.getWidth()/2-imgElement.width/2,
+    top: PhotoCollage.getHeight()/2-imgElement.height/2,
     angle: 0,
 });
-	canvas.add(imgInstance);
+	PhotoCollage.add(imgInstance);
+
 }
 
 //Download canvas Image
@@ -92,11 +103,11 @@ function downloadCanvas(link, canvasId, filename) {
     link.download = filename;
 }
 
-
-
 //Add dummy Images
+//Not Proper way, need to implement image search to display few images on basis of search.
 function  AddDummyImages() {
    var imgContainer=document.getElementById("img-container");
+    //Temporray  Fixtures.
    var len=5;
    for(var i=0;i<len;i++){
       
